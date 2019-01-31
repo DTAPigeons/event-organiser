@@ -1,7 +1,54 @@
+var visitorUtil = {
+    allVistors:[],
+    AddVisitor: function(visitorName, visitorIsMale, vistorAge, visitorWalet=0.0){
+    var newVisitor = {
+            name: "visitorName",
+            isMale: false,
+            age: 1,
+            walet: 0.0,
+            numberOfRegisteredEvents:0,            
+            GetGender: function(){
+                if(this.isMale) return "male";
+                return "female"
+            },
+            GetVIPStatus: function(){
+                return (numberOfRegisteredEvents % 5 == 0) && numberOfRegisteredEvents>0;
+            },
+            CanAddToEvent: function(event){
+                return event.price<=this.walet;
+            },
+            AddToEvent: function(event){
+                this.walet-=event.price;
+                this.numberOfRegisteredEvents++;
+            }
+        }
+        
+        newVisitor.name = visitorName;
+        newVisitor.isMale = visitorIsMale;
+        newVisitor.age = vistorAge;
+        newVisitor.walet = visitorWalet;
+
+        this.allVistors.push(newVisitor);
+    },
+
+    VisitorExists: function(vistorName){
+        var index = this.allVistors.findIndex(visitor=>visitor.name==vistorName);
+        return(index>=0);
+    },
+
+    GetVisitorByName(name){
+        var visitorIndex = this.allVistors.findIndex(visitor=>visitor.name==name);
+        if(visitorIndex<0){
+            console.log("Visitor not found!");
+            return;
+        }
+        return this.allVistors[visitorIndex];
+    }
+};
 var eventUtil = {
     events : [],
     editingEnabled: true,
-    CreatEvent: function(id, name,date, isRestriced=false){
+    CreatEvent: function(id, name,date, isRestriced=false,price = 0.0){
         if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
@@ -23,7 +70,8 @@ var eventUtil = {
                 return "#"+this.name
             },
             visitors:[],
-            date: Date()
+            date: Date(),
+            price: 0.0
         };
 
         newEvent.id = id;
@@ -31,6 +79,7 @@ var eventUtil = {
         newEvent.isRestriced = isRestriced;
         newEvent.visitors = [];
         newEvent.date = date;
+        newEvent.price = price
 
         this.events.push(newEvent);
     },
@@ -80,7 +129,7 @@ var eventUtil = {
         else console.log("Invalid event");
     },
 
-    EditEvent: function(id, name, date,isRestriced=false){
+    EditEvent: function(id, name, date,price = 0.0,isRestriced=false){
         if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
@@ -96,12 +145,13 @@ var eventUtil = {
         this.events[indexToEdit].name = name;
         this.events[indexToEdit].isRestriced = isRestriced;
         this.events[indexToEdit].date = date;
+        this.events[indexToEdit].price = price;
         
         console.log( this.events[indexToEdit].name
          +" "+ this.events[indexToEdit].GetRestrictionString())
     },
 
-    AddVisitorToEvent: function(eventId, visitorName, visitorIsMale, vistorAge){
+    AddVisitorToEvent: function(eventId, visitorName, visitorIsMale, vistorAge,visitorWalet = 0.0){
         if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
@@ -113,19 +163,11 @@ var eventUtil = {
             return;
         }
 
-        var newVisitor = {
-            name: "visitorName",
-            isMale: false,
-            age: 1,
-            GetGender: function(){
-                if(this.isMale) return "male";
-                return "female"
-            }
+        if(!visitorUtil.VisitorExists(visitorName)){
+            visitorUtil.AddVisitor(visitorName,visitorIsMale,vistorAge,visitorWalet);
         }
-        
-        newVisitor.name = visitorName;
-        newVisitor.isMale = visitorIsMale;
-        newVisitor.age = vistorAge;
+
+        var newVisitor = visitorUtil.GetVisitorByName(visitorName);
 
         var event = this.events[indexOfEvent];
 
@@ -135,8 +177,13 @@ var eventUtil = {
             )
             return;
         }
-
+        
+        if(!newVisitor.CanAddToEvent(event)){
+            console.log("Not enought cash!");
+            return;
+        }
         event.visitors.push(newVisitor);
+        newVisitor.AddToEvent(event);
     },
 
     DisplayVisitorsOfEventByEventId: function(eventId, showMales = true, showFemales = true){
@@ -175,9 +222,9 @@ var eventUtil = {
 
 /*
 //Създаване на нови събития и съхранението им в колекция
-eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака");
-eventUtil.CreatEvent("666","Сатанически бал", false);
-eventUtil.CreatEvent("69","Сатаническа оргия след бала", true);
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true);
 eventUtil.CreatEvent("Сатаническа оргия след бала", true);
 eventUtil.CreatEvent("69","", true);
 
@@ -190,8 +237,8 @@ eventUtil.DeleteEventById("666");
 eventUtil.DisplayEvents();
 console.log("===========================================")
 //Актуализира събитие по уникален идентификатор
-eventUtil.EditEvent("1234","Да полеем на бай Генчо новата барака");
-eventUtil.EditEvent("123","Да полеем на бай Генчо новата барака", true);
+eventUtil.EditEvent("1234","Да полеем на бай Генчо новата барака",new Date(2019,3,21,14));
+eventUtil.EditEvent("123","Да полеем на бай Генчо новата барака",,new Date(2019,3,21,14), true);
 eventUtil.EditEvent("666");
 
 eventUtil.DisplayEvents();
@@ -199,7 +246,7 @@ console.log("===========================================")
 */
 /*
 //Добавяне на клиенти към събитие
-eventUtil.AddVisitorToEvent("69","Cobrata16",true,16);
+eventUtil.AddVisitorToEvent("69","Cobrata16",true,16,100);
 eventUtil.AddVisitorToEvent("69","Zmeya",true,22);
 eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23);
 eventUtil.AddVisitorToEvent("69","Alice",false,22);
@@ -255,6 +302,7 @@ console.log("===========================================");
 eventUtil.DisplayEvents();
 */
 //Извеждане с разширени опции за филтриране
+/*
 eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
 eventUtil.CreatEvent("666","Сатанически бал", new Date(2019,3,21,14));
 eventUtil.CreatEvent("69","Сатаническа оргия след бала", new Date(2019,3,21,14),true);
@@ -265,3 +313,4 @@ console.log("===========================================");
 eventUtil.DisplayEvents(function(event){return event.isRestriced==false});
 console.log("===========================================");
 eventUtil.DisplayEvents();
+*/

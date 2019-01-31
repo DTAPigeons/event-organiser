@@ -73,7 +73,8 @@ var eventUtil = {
             },
             visitors:[],
             date: Date(),
-            price: 0.0
+            price: 0.0,
+            archived: false
         };
 
         newEvent.id = id;
@@ -81,9 +82,20 @@ var eventUtil = {
         newEvent.isRestriced = isRestriced;
         newEvent.visitors = [];
         newEvent.date = date;
-        newEvent.price = price
+        newEvent.price = price;
+        newEvent.archived = false;
 
         this.events.push(newEvent);
+    },
+
+    ArchiveEvent:function(id){
+        if(!this.editingEnabled){
+            console.log("Editing is currently not allowed!");
+            return;
+        }    
+        var indexToArchive = this.events.findIndex(event=>event.id==id);
+        if(indexToArchive>-1) this.events[indexToArchive].archived=true;
+        else console.log("Invalid event");
     },
 
     DisplayEvents: function(filter = function(event){return true}){
@@ -172,6 +184,11 @@ var eventUtil = {
         var newVisitor = visitorUtil.GetVisitorByName(visitorName);
 
         var event = this.events[indexOfEvent];
+
+        if(event.archived){
+            console.log("Cannot add visitors to archived event!")
+            return;
+        }
 
         if(event.isRestriced && newVisitor.age<18){
             console.log("Minors cannot visit restricted events! "+
@@ -336,5 +353,14 @@ eventUtil.AddVisitorToEvent("134","Alice",false,22,50);
 eventUtil.AddVisitorToEvent("69","Alice",false,22,50);
 console.log("===========================================")
 //Извеждане на всички посетители на събитие
+eventUtil.DisplayVisitorsOfEventByEventId("69");
+*/
+
+//Добавяне на потребител към архивирано събитие
+/*
+eventUtil.AddVisitorToEvent("69","Zmeya",true,22,100);
+eventUtil.ArchiveEvent("69");
+eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23)
+
 eventUtil.DisplayVisitorsOfEventByEventId("69");
 */

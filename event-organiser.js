@@ -236,6 +236,22 @@ var eventUtil = {
         }
 
         event.visitors.splice(indexOfVisitor,1);
+    },
+
+    DisplayProfitFromArchivedEvent: function(eventId){
+        var indexOfEvent = this.events.findIndex(event=>event.id==eventId);
+        if(indexOfEvent<0){
+            console.log("Invalid Data");
+            return;
+        }
+        var event = this.events[indexOfEvent];
+        if(!event.archived){
+            console.log("Event still on going");
+            return;
+        }
+
+        var profit = event.price*event.visitors.length;
+        console.log(event.GetNameWithPrefix()+" "+profit);
     }
 }
 
@@ -249,15 +265,26 @@ eventUtil.CreatEvent("Сатаническа оргия след бала", true
 eventUtil.CreatEvent("69","", true);
 
 //Извежда всички вече съхранени събития
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 //eventUtil.DisplayEvents();
+*/
 /*
 console.log("===========================================")
+
 //Изтриване на събитие по id
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 eventUtil.DeleteEventById("666");
 
 eventUtil.DisplayEvents();
 console.log("===========================================")
 //Актуализира събитие по уникален идентификатор
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 eventUtil.EditEvent("1234","Да полеем на бай Генчо новата барака",new Date(2019,3,21,14));
 eventUtil.EditEvent("123","Да полеем на бай Генчо новата барака",,new Date(2019,3,21,14), true);
 eventUtil.EditEvent("666");
@@ -267,6 +294,9 @@ console.log("===========================================")
 */
 /*
 //Добавяне на клиенти към събитие
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 eventUtil.AddVisitorToEvent("69","Cobrata16",true,16,100);
 eventUtil.AddVisitorToEvent("69","Zmeya",true,22);
 eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23);
@@ -276,7 +306,15 @@ console.log("===========================================")
 */
 /*
 //Извеждане на всички посетители на събитие
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 eventUtil.DisplayVisitorsOfEventByEventId("69");
+eventUtil.AddVisitorToEvent("69","Cobrata16",true,16,100);
+eventUtil.AddVisitorToEvent("69","Zmeya",true,22);
+eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23);
+eventUtil.AddVisitorToEvent("69","Alice",false,22);
+eventUtil.AddVisitorToEvent("691","Zmeya",true,22);
 console.log("===========================================")
 eventUtil.DisplayVisitorsOfEventByEventId("69",true,false);
 console.log("===========================================")
@@ -285,6 +323,11 @@ console.log("===========================================")
 */
 /*
 //Изтриване на посетител от събитие
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
+eventUtil.AddVisitorToEvent("69","Cobrata16",true,16,100);
+eventUtil.AddVisitorToEvent("69","Zmeya",true,22);
+eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23);
+eventUtil.AddVisitorToEvent("69","Alice",false,22);
 eventUtil.DeleteVisitorWithNameFromEventWithId("Zmeyda","691");
 eventUtil.DeleteVisitorWithNameFromEventWithId("Zmeya","69");
 eventUtil.DisplayVisitorsOfEventByEventId("69");
@@ -367,9 +410,34 @@ eventUtil.DisplayVisitorsOfEventByEventId("69");
 */
 
 //Проверка на префикс за архивирано събитие
+/*
 eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
 eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
 eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 eventUtil.DisplayEvents();
 eventUtil.ArchiveEvent("69");
 eventUtil.DisplayEvents();
+*/
+/*
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
+eventUtil.DisplayEvents();
+eventUtil.ArchiveEvent("69");
+//Извеждане само на архивирани събития
+eventUtil.DisplayEvents(function(event){return event.archived});
+//Извеждане само на неархивирани събития
+eventUtil.DisplayEvents(function(event){return !event.archived});*/
+
+//Извеждане на печалба от архивирано събитие
+/*
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
+eventUtil.AddVisitorToEvent("69","Zmeya",true,22,100);
+eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23,20);
+eventUtil.DisplayProfitFromArchivedEvent("69");
+eventUtil.ArchiveEvent("69");
+eventUtil.ArchiveEvent("666");
+eventUtil.DisplayProfitFromArchivedEvent("666");
+eventUtil.DisplayProfitFromArchivedEvent("69");
+*/

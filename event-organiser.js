@@ -25,6 +25,7 @@ var eventUtil = {
         newEvent.id = id;
         newEvent.name = name;
         newEvent.isRestriced = isRestriced;
+        newEvent.visitors = [];
         newEvent.date = date;
 
         this.events.push(newEvent);
@@ -37,8 +38,35 @@ var eventUtil = {
         });
     },
 
+    DisplayMostVisitedEvent: function(){
+        if(this.events.length<1){
+            console.log("There are no current events.")
+            return;
+        }
+        var topEvent = this.events[0];
+        var hasTopEvent = false;
+        if(this.events.length==1) hasTopEvent = true;
+
+        for(i=1;i<this.events.length;i++){
+            if(topEvent.visitors.length<this.events[i].visitors.length){
+                topEvent = this.events[i];
+                hasTopEvent = true;
+            }
+            else if(topEvent.visitors.length>this.events[i].visitors.length){
+                hasTopEvent = true;
+            }
+        }
+
+        if(!hasTopEvent){
+            console.log("There is no top event!");
+            return;
+        }
+
+        console.log(topEvent.id+" "+topEvent.name+" "+topEvent.GetRestrictionString()+" "+topEvent.date);
+    },
+
     DeleteEventById: function(id){
-        if(!editingEnabled){
+        if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
         }    
@@ -48,7 +76,7 @@ var eventUtil = {
     },
 
     EditEvent: function(id, name, date,isRestriced=false){
-        if(!editingEnabled){
+        if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
         }
@@ -69,7 +97,7 @@ var eventUtil = {
     },
 
     AddVisitorToEvent: function(eventId, visitorName, visitorIsMale, vistorAge){
-        if(!editingEnabled){
+        if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
         }
@@ -120,7 +148,7 @@ var eventUtil = {
     },
 
     DeleteVisitorWithNameFromEventWithId: function(visitorName,eventId){
-        if(!editingEnabled){
+        if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
         }
@@ -163,6 +191,8 @@ eventUtil.EditEvent("666");
 
 eventUtil.DisplayEvents();
 console.log("===========================================")
+*/
+/*
 //Добавяне на клиенти към събитие
 eventUtil.AddVisitorToEvent("69","Cobrata16",true,16);
 eventUtil.AddVisitorToEvent("69","Zmeya",true,22);
@@ -170,6 +200,8 @@ eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23);
 eventUtil.AddVisitorToEvent("69","Alice",false,22);
 eventUtil.AddVisitorToEvent("691","Zmeya",true,22);
 console.log("===========================================")
+*/
+/*
 //Извеждане на всички посетители на събитие
 eventUtil.DisplayVisitorsOfEventByEventId("69");
 console.log("===========================================")
@@ -177,19 +209,32 @@ eventUtil.DisplayVisitorsOfEventByEventId("69",true,false);
 console.log("===========================================")
 eventUtil.DisplayVisitorsOfEventByEventId("69",false,true);
 console.log("===========================================")
-
+*/
+/*
 //Изтриване на посетител от събитие
 eventUtil.DeleteVisitorWithNameFromEventWithId("Zmeyda","691");
 eventUtil.DeleteVisitorWithNameFromEventWithId("Zmeya","69");
 eventUtil.DisplayVisitorsOfEventByEventId("69");
 console.log("===========================================")
 */
+/*
 //Глобална забрана за редактитане
 eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14),false);
 eventUtil.editingEnabled = false;
 eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака",new Date(2019,4,21,13));
 eventUtil.DisplayEvents();
-console.log("===========================================")
+console.log("===========================================");
 eventUtil.editingEnabled = true;
 eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака",new Date(2019,4,21,14,30));
 eventUtil.DisplayEvents();
+*/
+
+//Извеждане на събитие с най-много посетители
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14),false);
+eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака",new Date(2019,4,21,14,30));
+eventUtil.DisplayEvents();
+eventUtil.DisplayMostVisitedEvent();
+eventUtil.AddVisitorToEvent("666","XXXKilerXXX",true,23);
+eventUtil.AddVisitorToEvent("666","Alice",false,22);
+console.log("===========================================");
+eventUtil.DisplayMostVisitedEvent();

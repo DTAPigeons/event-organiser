@@ -31,10 +31,11 @@ var eventUtil = {
         this.events.push(newEvent);
     },
 
-    DisplayEvents: function(){
+    DisplayEvents: function(showRestricted=true){
         this.events.forEach(function(event){
-
-            console.log(event.id+" "+event.name+" "+event.GetRestrictionString()+" "+event.date);
+            if(showRestricted || !event.isRestriced){
+                console.log(event.id+" "+event.name+" "+event.GetRestrictionString()+" "+event.date);
+            }            
         });
     },
 
@@ -230,6 +231,7 @@ eventUtil.DisplayEvents();
 */
 
 //Извеждане на събитие с най-много посетители
+/*
 eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14),false);
 eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака",new Date(2019,4,21,14,30));
 eventUtil.DisplayEvents();
@@ -238,3 +240,12 @@ eventUtil.AddVisitorToEvent("666","XXXKilerXXX",true,23);
 eventUtil.AddVisitorToEvent("666","Alice",false,22);
 console.log("===========================================");
 eventUtil.DisplayMostVisitedEvent();
+*/
+
+//Извежнаде само на събития подходящи за малолетни.
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал", new Date(2019,3,21,14));
+eventUtil.CreatEvent("69","Сатаническа оргия след бала", new Date(2019,3,21,14),true);
+eventUtil.DisplayEvents(false);
+console.log("===========================================");
+eventUtil.DisplayEvents();

@@ -18,6 +18,10 @@ var eventUtil = {
                 if(this.isRestriced) return "+18";
                 return "Everyone"
             },
+            GetNameWithRestrictionPrefix: function(){
+                if(this.isRestriced) return "*"+this.name;
+                return "#"+this.name
+            },
             visitors:[],
             date: Date()
         };
@@ -34,7 +38,7 @@ var eventUtil = {
     DisplayEvents: function(showRestricted=true){
         this.events.forEach(function(event){
             if(showRestricted || !event.isRestriced){
-                console.log(event.id+" "+event.name+" "+event.GetRestrictionString()+" "+event.date);
+                console.log(event.id+" "+event.GetNameWithRestrictionPrefix()+" "+event.GetRestrictionString()+" "+event.date);
             }            
         });
     },
@@ -63,7 +67,7 @@ var eventUtil = {
             return;
         }
 
-        console.log(topEvent.id+" "+topEvent.name+" "+topEvent.GetRestrictionString()+" "+topEvent.date);
+        console.log(topEvent.id+" "+topEvent.GetNameWithRestrictionPrefix()+" "+topEvent.GetRestrictionString()+" "+topEvent.date);
     },
 
     DeleteEventById: function(id){

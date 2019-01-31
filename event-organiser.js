@@ -1,6 +1,11 @@
 var eventUtil = {
     events : [],
+    editingEnabled: true,
     CreatEvent: function(id, name, isRestriced=false){
+        if(!this.editingEnabled){
+            console.log("Editing is currently not allowed!");
+            return;
+        }
         if(!id || !name || typeof name!=='string'){
             console.log("Invalid event");
             return;
@@ -30,13 +35,21 @@ var eventUtil = {
         });
     },
 
-    DeleteEventById: function(id){    
+    DeleteEventById: function(id){
+        if(!editingEnabled){
+            console.log("Editing is currently not allowed!");
+            return;
+        }    
         var indexToDelete = this.events.findIndex(event=>event.id==id);
         if(indexToDelete>-1) this.events.splice(indexToDelete,1);
         else console.log("Invalid event");
     },
 
     EditEvent: function(id, name, isRestriced=false){
+        if(!editingEnabled){
+            console.log("Editing is currently not allowed!");
+            return;
+        }
         var indexToEdit = this.events.findIndex(event=>event.id==id);
         if(indexToEdit<0 || !name|| typeof name!=='string') {
             console.log("Invalid Event");
@@ -53,6 +66,10 @@ var eventUtil = {
     },
 
     AddVisitorToEvent: function(eventId, visitorName, visitorIsMale, vistorAge){
+        if(!editingEnabled){
+            console.log("Editing is currently not allowed!");
+            return;
+        }
         var indexOfEvent = this.events.findIndex(event=>event.id==eventId);
         if(indexOfEvent<0 || !visitorName|| typeof visitorName!=='string' 
         || typeof visitorIsMale === 'undefined' || vistorAge<=0){
@@ -100,6 +117,10 @@ var eventUtil = {
     },
 
     DeleteVisitorWithNameFromEventWithId: function(visitorName,eventId){
+        if(!editingEnabled){
+            console.log("Editing is currently not allowed!");
+            return;
+        }
         var indexOfEvent = this.events.findIndex(event=>event.id==eventId);
         if(indexOfEvent<0){
             console.log("Invalid Data");
@@ -116,6 +137,7 @@ var eventUtil = {
     }
 }
 
+/*
 //Създаване на нови събития и съхранението им в колекция
 eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака");
 eventUtil.CreatEvent("666","Сатанически бал", false);
@@ -125,7 +147,6 @@ eventUtil.CreatEvent("69","", true);
 
 //Извежда всички вече съхранени събития
 eventUtil.DisplayEvents();
-/*
 console.log("===========================================")
 //Изтриване на събитие по id
 eventUtil.DeleteEventById("666");
@@ -138,7 +159,6 @@ eventUtil.EditEvent("123","Да полеем на бай Генчо новата
 eventUtil.EditEvent("666");
 
 eventUtil.DisplayEvents();
-*/
 console.log("===========================================")
 //Добавяне на клиенти към събитие
 eventUtil.AddVisitorToEvent("69","Cobrata16",true,16);
@@ -160,4 +180,13 @@ eventUtil.DeleteVisitorWithNameFromEventWithId("Zmeyda","691");
 eventUtil.DeleteVisitorWithNameFromEventWithId("Zmeya","69");
 eventUtil.DisplayVisitorsOfEventByEventId("69");
 console.log("===========================================")
-
+*/
+//Глобална забрана за редактитане
+eventUtil.CreatEvent("666","Сатанически бал", false);
+eventUtil.editingEnabled = false;
+eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака");
+eventUtil.DisplayEvents();
+console.log("===========================================")
+eventUtil.editingEnabled = true;
+eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака");
+eventUtil.DisplayEvents();

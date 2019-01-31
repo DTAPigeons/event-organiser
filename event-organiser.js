@@ -1,7 +1,7 @@
 var eventUtil = {
     events : [],
     editingEnabled: true,
-    CreatEvent: function(id, name, isRestriced=false){
+    CreatEvent: function(id, name,date, isRestriced=false){
         if(!this.editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
@@ -18,12 +18,14 @@ var eventUtil = {
                 if(this.isRestriced) return "+18";
                 return "Everyone"
             },
-            visitors:[]
+            visitors:[],
+            date: Date()
         };
 
         newEvent.id = id;
         newEvent.name = name;
         newEvent.isRestriced = isRestriced;
+        newEvent.date = date;
 
         this.events.push(newEvent);
     },
@@ -31,7 +33,7 @@ var eventUtil = {
     DisplayEvents: function(){
         this.events.forEach(function(event){
 
-            console.log(event.id+" "+event.name+" "+event.GetRestrictionString());
+            console.log(event.id+" "+event.name+" "+event.GetRestrictionString()+" "+event.date);
         });
     },
 
@@ -45,7 +47,7 @@ var eventUtil = {
         else console.log("Invalid event");
     },
 
-    EditEvent: function(id, name, isRestriced=false){
+    EditEvent: function(id, name, date,isRestriced=false){
         if(!editingEnabled){
             console.log("Editing is currently not allowed!");
             return;
@@ -60,6 +62,7 @@ var eventUtil = {
         oldEvent.GetRestrictionString()+", changed to ");
         this.events[indexToEdit].name = name;
         this.events[indexToEdit].isRestriced = isRestriced;
+        this.events[indexToEdit].date = date;
         
         console.log( this.events[indexToEdit].name
          +" "+ this.events[indexToEdit].GetRestrictionString())
@@ -182,11 +185,11 @@ eventUtil.DisplayVisitorsOfEventByEventId("69");
 console.log("===========================================")
 */
 //Глобална забрана за редактитане
-eventUtil.CreatEvent("666","Сатанически бал", false);
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14),false);
 eventUtil.editingEnabled = false;
-eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака");
+eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака",new Date(2019,4,21,13));
 eventUtil.DisplayEvents();
 console.log("===========================================")
 eventUtil.editingEnabled = true;
-eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака");
+eventUtil.CreatEvent("1235","Да построим на бай Данчо нова барака",new Date(2019,4,21,14,30));
 eventUtil.DisplayEvents();

@@ -66,7 +66,7 @@ var eventUtil = {
                 return "Everyone"
             },
             GetNameWithPrefix: function(){
-                var prefix = "";
+                var prefix = (this.archived) ? " ~ ": "";
                 prefix+=(isRestriced) ? "*" : "#";
                 prefix+=(price==0.0) ? "!" : "$";
                 return prefix + this.name
@@ -241,6 +241,7 @@ var eventUtil = {
 
 
 //Създаване на нови събития и съхранението им в колекция
+/*
 eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
 eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
 eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
@@ -248,7 +249,7 @@ eventUtil.CreatEvent("Сатаническа оргия след бала", true
 eventUtil.CreatEvent("69","", true);
 
 //Извежда всички вече съхранени събития
-eventUtil.DisplayEvents();
+//eventUtil.DisplayEvents();
 /*
 console.log("===========================================")
 //Изтриване на събитие по id
@@ -364,3 +365,11 @@ eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23)
 
 eventUtil.DisplayVisitorsOfEventByEventId("69");
 */
+
+//Проверка на префикс за архивирано събитие
+eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
+eventUtil.DisplayEvents();
+eventUtil.ArchiveEvent("69");
+eventUtil.DisplayEvents();

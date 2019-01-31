@@ -12,13 +12,13 @@ var visitorUtil = {
                 return "female"
             },
             GetVIPStatus: function(){
-                return (numberOfRegisteredEvents % 5 == 0) && numberOfRegisteredEvents>0;
+                return (this.numberOfRegisteredEvents % 5 == 0) && this.numberOfRegisteredEvents>0;
             },
             CanAddToEvent: function(event){
-                return event.price<=this.walet;
+                return event.price<=this.walet || this.GetVIPStatus();
             },
             AddToEvent: function(event){
-                this.walet-=event.price;
+                if(!this.GetVIPStatus()) this.walet-=event.price;
                 this.numberOfRegisteredEvents++;
             }
         }
@@ -65,9 +65,11 @@ var eventUtil = {
                 if(this.isRestriced) return "+18";
                 return "Everyone"
             },
-            GetNameWithRestrictionPrefix: function(){
-                if(this.isRestriced) return "*"+this.name;
-                return "#"+this.name
+            GetNameWithPrefix: function(){
+                var prefix = "";
+                prefix+=(isRestriced) ? "*" : "#";
+                prefix+=(price==0.0) ? "!" : "$";
+                return prefix + this.name
             },
             visitors:[],
             date: Date(),
@@ -87,7 +89,7 @@ var eventUtil = {
     DisplayEvents: function(filter = function(event){return true}){
         this.events.forEach(function(event){
             if(filter(event)){
-                console.log(event.id+" "+event.GetNameWithRestrictionPrefix()+" "+event.GetRestrictionString()+" "+event.date);
+                console.log(event.id+" "+event.GetNameWithPrefix()+" "+event.GetRestrictionString()+" "+event.date);
             }            
         });
     },
@@ -116,7 +118,7 @@ var eventUtil = {
             return;
         }
 
-        console.log(topEvent.id+" "+topEvent.GetNameWithRestrictionPrefix()+" "+topEvent.GetRestrictionString()+" "+topEvent.date);
+        console.log(topEvent.id+" "+topEvent.GetNameWithPrefix()+" "+topEvent.GetRestrictionString()+" "+topEvent.date);
     },
 
     DeleteEventById: function(id){
@@ -195,7 +197,7 @@ var eventUtil = {
         this.events[indexOfEvent].visitors.forEach(
             function(visitor){
                 var showVistor = (showMales && visitor.isMale) || (showFemales && !visitor.isMale);
-                if(showVistor) console.log(visitor.name+" "+visitor.age+" "+visitor.GetGender())
+                if(showVistor) console.log(visitor.name+" "+visitor.age+" "+visitor.GetGender()+" "+visitor.walet)
         })
     },
 
@@ -220,16 +222,17 @@ var eventUtil = {
     }
 }
 
-/*
+
 //Създаване на нови събития и съхранението им в колекция
 eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
-eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false);
-eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true);
+eventUtil.CreatEvent("666","Сатанически бал",new Date(2019,3,21,14), false,);
+eventUtil.CreatEvent("69","Сатаническа оргия след бала",new Date(2019,3,21,14), true, 10);
 eventUtil.CreatEvent("Сатаническа оргия след бала", true);
 eventUtil.CreatEvent("69","", true);
 
 //Извежда всички вече съхранени събития
 eventUtil.DisplayEvents();
+/*
 console.log("===========================================")
 //Изтриване на събитие по id
 eventUtil.DeleteEventById("666");
@@ -313,4 +316,25 @@ console.log("===========================================");
 eventUtil.DisplayEvents(function(event){return event.isRestriced==false});
 console.log("===========================================");
 eventUtil.DisplayEvents();
+*/
+
+//Добавяне на посетители на събитие. Проверка на цена и VIP статус.
+/*
+eventUtil.CreatEvent("134","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("34","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+eventUtil.CreatEvent("21234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));eventUtil.CreatEvent("1234","Да построим на бай Генчо нова барака",new Date(2019,3,21,14));
+
+eventUtil.AddVisitorToEvent("69","Cobrata16",true,16,100);
+eventUtil.AddVisitorToEvent("69","Zmeya",true,22,100);
+eventUtil.AddVisitorToEvent("69","XXXKilerXXX",true,23);
+eventUtil.AddVisitorToEvent("1234","Alice",false,22,50);
+eventUtil.AddVisitorToEvent("234","Alice",false,22,50);
+eventUtil.AddVisitorToEvent("34","Alice",false,22,50);
+eventUtil.AddVisitorToEvent("21234","Alice",false,22,50);
+eventUtil.AddVisitorToEvent("134","Alice",false,22,50);
+eventUtil.AddVisitorToEvent("69","Alice",false,22,50);
+console.log("===========================================")
+//Извеждане на всички посетители на събитие
+eventUtil.DisplayVisitorsOfEventByEventId("69");
 */
